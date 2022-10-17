@@ -1,4 +1,5 @@
-
+import {n} from "player.js";
+console.log(n);
 ROCK = 0, PAPER = 1, SCISSOR = 2;
 RPSTABLE = [2,1,0,0,2,1,1,0,2];
 RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
@@ -21,9 +22,11 @@ function initialize()
 
 function playRound(usrIn)
 {
+    var player = new Player(1,5,5);
+    console.log(player.rpsArr[0]);
     var cpu = cpuChoice();
     var result = RPSTABLE[(cpu * 3) + usrIn];
-    console.log(cpu + " " + usrIn + " " + result);
+
     if(result == 0) //L
     {
         outputDiv.innerHTML = RPSSTRING[cpu] + " beats " + RPSSTRING[usrIn] + "<br/>CPU Wins";
