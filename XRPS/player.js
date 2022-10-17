@@ -1,19 +1,32 @@
-export const n = 5;
 
-class Player
+
+export class Player
 {
-    n=5
     constructor(r,p,s)
     {
         this.rpsArr = [r,p,s];
     }
 
-    rm(idx) //remove
+    setR(num)
+    {
+        this.rpsArr[0] = num;
+    }
+
+    setP(num)
+    {
+        this.rpsArr[1] = num;
+    }
+
+    setS(num)
+    {
+        this.rpsArr[2] = num;
+    }
+    rm(idx) //remove one
     {   
         rpsArr[idx]--;
     }
 
-    add(idx)
+    add(idx)// add one
     {
         rpsArr[idx]++;
     }

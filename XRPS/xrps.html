@@ -4,15 +4,14 @@
         <title></title>
         <style>
             
-        </style>
-        <script type ="module" src = "player.js"></script>
-        <script src = "xtreme_rps.js"></script>
-        
+        </style>        
     </head>
-    <body onload = "initialize();">
-        <button onclick = "playRound(0);">R</button>
-        <button onclick = "playRound(1);">P</button>
-        <button onclick = "playRound(2);">S</button>
+    <body>
+        <button id = "btn-r">R</button>
+        <button id = "btn-p">P</button>
+        <button id = "btn-s">S</button>
         <div id = "outdiv"></div>       
+        <script type ="module" src = "./player.js"></script>
+        <script type = "module" src = "./xtreme_rps.js"></script>
     </body>
 </html>

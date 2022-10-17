@@ -1,8 +1,14 @@
-import {n} from "player.js";
-console.log(n);
-ROCK = 0, PAPER = 1, SCISSOR = 2;
-RPSTABLE = [2,1,0,0,2,1,1,0,2];
-RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
+import {Player} from "./player.js";
+
+const ROCK = 0; const PAPER = 1; const SCISSOR = 2;
+const RPSTABLE = [2,1,0,0,2,1,1,0,2];
+const RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
+const outputDiv = document.getElementById("outdiv");
+const playerUsr = new Player(5,5,5);
+const playerCpu = new Player(5,5,5);
+const btnR = document.getElementById("btn-r");
+const btnP = document.getElementById("btn-p");
+const btnS = document.getElementById("btn-s");
 /*     u s r
        r p s
 
@@ -17,16 +23,15 @@ u  s   w l t
 */
 function initialize()
 {
-    outputDiv = document.getElementById("outdiv");
+    console.log("init");
 }
 
 function playRound(usrIn)
 {
-    var player = new Player(1,5,5);
-    console.log(player.rpsArr[0]);
+    
     var cpu = cpuChoice();
     var result = RPSTABLE[(cpu * 3) + usrIn];
-
+    console.log(RPSSTRING[usrIn] + " " + RPSSTRING[cpu]);
     if(result == 0) //L
     {
         outputDiv.innerHTML = RPSSTRING[cpu] + " beats " + RPSSTRING[usrIn] + "<br/>CPU Wins";
@@ -52,3 +57,9 @@ function rndNum(min,max)
 	var rnd = parseInt(Math.random()*mult) + min;		
 	return rnd;
 }
+
+
+//window.addEventListener('load', initialize);
+btnR.onclick = function(){playRound(0)};
+btnP.onclick = function(){playRound(1)};
+btnS.onclick = function(){playRound(2)};
