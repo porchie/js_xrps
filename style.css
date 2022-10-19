@@ -1,0 +1,12 @@
+button#btn-r
+{
+    background-image: url("./images/rock.png");
+}
+button#btn-p
+{
+    background-image: url("./images/paper.png");
+}
+button#btn-s
+{
+    background-image: url("./images/scissor.png");
+}

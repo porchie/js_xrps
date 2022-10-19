@@ -1,16 +1,18 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        <link rel="shortcut icon" href="./images/img.png">
         <title></title>
-        <style>
-            
-        </style>        
+        <link rel="stylesheet" href="style.css">      
     </head>
     <body>
-        <button id = "btn-r">R</button>
-        <button id = "btn-p">P</button>
-        <button id = "btn-s">S</button>
-        <div id = "outdiv"></div>       
+        <div class = "btn-div">
+            <button class = "btn" id = "btn-r"></button>
+            <button class = "btn" id = "btn-p"></button>
+            <button class = "btn" id = "btn-s"></button>
+        </div>
+        <div class = "graphics" id ="graphical"></div>
+        <div class = "msg" id = "outdiv"></div>       
         <script type ="module" src = "./player.js"></script>
         <script type = "module" src = "./xtreme_rps.js"></script>
     </body>

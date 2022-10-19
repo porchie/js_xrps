@@ -23,11 +23,13 @@ export class Player
     }
     rm(idx) //remove one
     {   
-        rpsArr[idx]--;
+        this.rpsArr[idx]--;
     }
 
     add(idx)// add one
     {
-        rpsArr[idx]++;
+        this.rpsArr[idx]++;
     }
+
+
 }
