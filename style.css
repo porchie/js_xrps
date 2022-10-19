@@ -10,3 +10,9 @@ button#btn-s
 {
     background-image: url("./images/scissor.png");
 }
+
+.btn
+{
+    height: 200px;
+    width: 200px;
+}
