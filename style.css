@@ -1,18 +1,31 @@
-button#btn-r
+.rock
 {
     background-image: url("./images/rock.png");
 }
-button#btn-p
+.paper
 {
     background-image: url("./images/paper.png");
 }
-button#btn-s
+.scissor
 {
     background-image: url("./images/scissor.png");
 }
 
+.player-ui
+{
+    float:left;
+}
+
+.cpu-ui
+{
+    float: right;
+}
+
 .btn
 {
+    text-align: center;
+    font: 18pt 'Georgia';
     height: 200px;
     width: 200px;
+    border: thick solid blueviolet;
 }

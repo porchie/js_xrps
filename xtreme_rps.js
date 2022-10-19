@@ -7,7 +7,10 @@ const outputDiv = document.getElementById("outdiv");
 const graphicsDiv = document.getElementById("graphical");
 const playerUsr = new Player(5,5,5);
 const playerCpu = new Player(5,5,5);
-const RPSBTNARR = [document.getElementById("btn-r"),document.getElementById("btn-p"),document.getElementById("btn-s")];
+const playerBtnArr = [document.getElementById("ply-r"),document.getElementById("ply-p"),document.getElementById("ply-s")];
+const cpuDisplayArr = [document.getElementById("cpu-r"),document.getElementById("cpu-p"),document.getElementById("cpu-s")];
+
+
 /*     u s r
        r p s
 
@@ -25,15 +28,18 @@ function initialize()
     console.log("init");
     for(var i = 0;i<3;i++)
     {
-        var btn = RPSBTNARR[i];
-        btn.innerHTML = RPSSTRING[i] + " " + playerUsr.rpsArr[i];
+        var p = playerBtnArr[i];
+        var c = cpuDisplayArr[i];
+        p.innerHTML = playerUsr.rpsArr[i];
+        c.innerHTML = playerCpu.rpsArr[i];
     }
+
 }
 
 function playRound(usrIn)
 {
     outputDiv.innerHTML = "";
-    if(playerUsr.rpsArr[usrIn] == 0)
+    if(playerUsr.isOut(usrIn))
     {
         outputDiv.innerHTML = "Out of " + RPSSTRING[usrIn];
         return; 
@@ -58,18 +64,35 @@ function playRound(usrIn)
     {
         message = "Both players chose " + RPSSTRING[usrIn];
     }
-    RPSBTNARR[usrIn].innerHTML = RPSSTRING[usrIn] + " "  + playerUsr.rpsArr[usrIn];
-    RPSBTNARR[cpu].innerHTML = RPSSTRING[cpu] + " "  + playerUsr.rpsArr[cpu];
-    
-    outputDiv.innerHTML += message;
+    playerBtnArr[usrIn].innerHTML =  playerUsr.rpsArr[usrIn];
+    playerBtnArr[cpu].innerHTML =  playerUsr.rpsArr[cpu];
+    cpuDisplayArr[usrIn].innerHTML = playerCpu.rpsArr[usrIn];
+    cpuDisplayArr[cpu].innerHTML = playerCpu.rpsArr[cpu];
+
+    if(playerUsr.isAllOut() || playerCpu.isAllOut())
+    {
+        //game done
+        outputDiv.innerHTML += "<br/>" + (playerUsr.isAllOut() ? "You WIN!!!!" : "Git GUD");
+    }
+    else
+    {
+        outputDiv.innerHTML += message;
+    }
 
 }
 
 function cpuChoice()
 {
-    var choice = rndNum(0,2); //add intelligence l8r
+    var choice = pickRndFrArr(playerCpu.arrOfArsenal()) //add intelligence l8r
     return choice;
 
+}
+
+function pickRndFrArr(arr) //picks a rand idx from an array
+{
+    var rnd = rndNum(0,arr.length-1);
+    var idx = rndNum(0,arr.length-1);
+    return arr[idx];
 }
 
 function rndNum(min,max)
@@ -81,6 +104,6 @@ function rndNum(min,max)
 
 
 window.addEventListener('load', initialize);
-RPSBTNARR[ROCK].onclick = function(){playRound(ROCK)};
-RPSBTNARR[PAPER].onclick = function(){playRound(PAPER)};
-RPSBTNARR[SCISSOR].onclick = function(){playRound(SCISSOR)};
+playerBtnArr[ROCK].addEventListener('click',function(){playRound(ROCK)});
+playerBtnArr[PAPER].addEventListener('click',function(){playRound(PAPER)});
+playerBtnArr[SCISSOR].addEventListener('click', function(){playRound(SCISSOR)});
