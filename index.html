@@ -6,18 +6,26 @@
         <link rel="stylesheet" href="style.css">      
     </head>
     <body>
-        <div class = "btn-div player-ui">
-            <div class = "btn player-ui rock" id = "ply-r"></div>
-            <div class = "btn player-ui paper" id = "ply-p"></div>
-            <div class = "btn player-ui scissor" id = "ply-s"></div>
+        <div class = "play-ui">
+            <div class = "btn-div player-ui">
+                <div class = "btn btn-play player-ui rock" id = "ply-r"></div>
+                <div class = "btn btn-play player-ui paper" id = "ply-p"></div>
+                <div class = "btn btn-play player-ui scissor" id = "ply-s"></div>
+            </div>
+            <div class = "cpu-ui btn-div">
+                <div class = "btn btn-play cpu-ui rock" id = "cpu-r"></div>
+                <div class = "btn btn-play cpu-ui paper" id = "cpu-p"></div>
+                <div class = "btn btn-play cpu-ui scissor" id = "cpu-s"></div>
+            </div>
+            <div class = "graphics" id ="graphical"></div>
         </div>
-        <div class = "cpu-ui btn-div">
-            <div class = "btn cpu-ui rock" id = "cpu-r"></div>
-            <div class = "btn cpu-ui paper" id = "cpu-p"></div>
-            <div class = "btn cpu-ui scissor" id = "cpu-s"></div>
+        <div class = "option-ui">
+            <div class = "btn btn-reset" id = "rst"></div>
         </div>
-        <div class = "graphics" id ="graphical"></div>
-        <div class = "msg" id = "outdiv"></div>       
+        <div class = "text-ui">
+            <div class = "msg" id = "outdiv"></div> 
+            <div class = "msg log" id = "log"></div>
+        </div>
         <script type ="module" src = "./player.js"></script>
         <script type = "module" src = "./xtreme_rps.js"></script>
     </body>

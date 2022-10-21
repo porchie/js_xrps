@@ -21,11 +21,35 @@
     float: right;
 }
 
-.btn
+.btn-play
 {
     text-align: center;
     font: 18pt 'Georgia';
     height: 200px;
     width: 200px;
     border: thick solid blueviolet;
+}
+
+.log
+{
+    white-space: pre;
+}
+
+.option-ui
+{
+    position: relative;
+}
+
+.play-ui
+{
+    position: relative;
+    height: 220px;
+}
+
+.btn-reset
+{
+    text-align: center;
+    height: 60px;
+    width: 100px;
+    border: thin solid blueviolet;
 }
