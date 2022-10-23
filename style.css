@@ -21,18 +21,27 @@
     float: right;
 }
 
-.btn-play
+
+.picture-ui
 {
-    text-align: center;
     font: 18pt 'Georgia';
     height: 200px;
+    display: inline-flex;
+    align-items: flex-start;
     width: 200px;
     border: thick solid blueviolet;
+}
+
+
+.msg
+{
+    border: medium solid blueviolet;
 }
 
 .log
 {
     white-space: pre;
+
 }
 
 .option-ui
@@ -48,6 +57,7 @@
 
 .btn-reset
 {
+    background-image: url("./images/reset.png");
     text-align: center;
     height: 60px;
     width: 100px;

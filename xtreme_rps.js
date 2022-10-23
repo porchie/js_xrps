@@ -5,8 +5,8 @@ const RPSTABLE = [2,1,0,0,2,1,1,0,2];
 const RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
 const messageDiv = document.getElementById("outdiv");
 const graphicsDiv = document.getElementById("graphical");
-let playerUsr = new Player(5,5,5);
-let playerCpu = new Player(0,1,0);
+var playerUsr = new Player(5,5,5);
+var playerCpu = new Player(0,1,0);
 const playerBtnArr = [document.getElementById("ply-r"),document.getElementById("ply-p"),document.getElementById("ply-s")];
 const cpuDisplayArr = [document.getElementById("cpu-r"),document.getElementById("cpu-p"),document.getElementById("cpu-s")];
 const resetBtn = document.getElementById("rst");
@@ -26,13 +26,20 @@ u  s   w l t
 */
 function initialize()
 {
+    /*
     playerBtnArr[ROCK].addEventListener('click',function(){playRound(ROCK)});
     playerBtnArr[PAPER].addEventListener('click',function(){playRound(PAPER)});
     playerBtnArr[SCISSOR].addEventListener('click', function(){playRound(SCISSOR)});
     resetBtn.addEventListener('click',function(){reset()});
+    */
+    playerBtnArr[ROCK].onclick = function(){playRound(ROCK)};
+    playerBtnArr[PAPER].onclick = function(){playRound(PAPER)};
+    playerBtnArr[SCISSOR].onclick = function(){playRound(SCISSOR)};
+    resetBtn.onclick = function(){reset()};
     while(messageDiv.firstChild) messageDiv.removeChild(messageDiv.firstChild);
-    messageDiv.appendChild(document.createTextNode(""));
+    messageDiv.appendChild(document.createTextNode("Result: "));
     while(log.firstChild)log.removeChild(log.firstChild);
+    log.appendChild(document.createTextNode("Log:\n"));
     for(var i = 0;i<3;i++)
     {
         var p = playerBtnArr[i];
@@ -46,66 +53,56 @@ function initialize()
 
 function reset()
 {
+    playerBtnArr.forEach(e => e.disabled = false)
     playerUsr = new Player(5,5,5);
-    playerCpu = new Player(5,5,5);
+    playerCpu = new Player(0,1,0);
     initialize();
 }
 
 function playRound(usrIn)
 {
-    messageDiv.firstChild.nodeValue = "";
     if(playerUsr.isOut(usrIn))
     {
         messageDiv.firstChild.nodeValue = "Out of " + RPSSTRING[usrIn];
         return; 
     }
     var cpu = cpuChoice();
-    if(cpu === -1)
+    var result = RPSTABLE[(cpu * 3) + usrIn];
+    
+    console.log(RPSSTRING[usrIn] + " " + RPSSTRING[cpu]);        
+    var message = "";
+    if(result == 0) //L
     {
-        playerBtnArr.forEach(e => removeAllListeners(e));
+        playerUsr.rm(usrIn);
+        playerCpu.add(usrIn);
+        message = RPSSTRING[cpu] + " beats " + RPSSTRING[usrIn] + "--> CPU Wins";
     }
-    else
+    else if(result == 1) //W
     {
-        var result = RPSTABLE[(cpu * 3) + usrIn];
-        console.log(RPSSTRING[usrIn] + " " + RPSSTRING[cpu]);
-        var message = "";
-        if(result == 0) //L
-        {
-            playerUsr.rm(usrIn);
-            playerCpu.add(usrIn);
-            message = RPSSTRING[cpu] + " beats " + RPSSTRING[usrIn] + "--> CPU Wins";
-        }
-        else if(result == 1) //W
-        {
-            playerCpu.rm(cpu);
-            playerUsr.add(cpu);
-            message = RPSSTRING[usrIn] + " beats " + RPSSTRING[cpu] + "--> usr Wins";
-        }
-        else if(result == 2) //T
-        {
-            message = "Both players chose " + RPSSTRING[usrIn];
-        }
-        playerBtnArr[usrIn].innerHTML =  playerUsr.rpsArr[usrIn];
-        playerBtnArr[cpu].innerHTML =  playerUsr.rpsArr[cpu];
-        cpuDisplayArr[usrIn].innerHTML = playerCpu.rpsArr[usrIn];
-        cpuDisplayArr[cpu].innerHTML = playerCpu.rpsArr[cpu];
+        playerCpu.rm(cpu);
+        playerUsr.add(cpu);
+        message = RPSSTRING[usrIn] + " beats " + RPSSTRING[cpu] + "--> usr Wins";
     }
+    else if(result == 2) //T
+    {
+        message = "Both players chose " + RPSSTRING[usrIn];
+    }
+    playerBtnArr[usrIn].innerHTML =  playerUsr.rpsArr[usrIn];
+    playerBtnArr[cpu].innerHTML =  playerUsr.rpsArr[cpu];
+    cpuDisplayArr[usrIn].innerHTML = playerCpu.rpsArr[usrIn];
+    cpuDisplayArr[cpu].innerHTML = playerCpu.rpsArr[cpu];
+    
     if(playerUsr.isAllOut() || playerCpu.isAllOut())
     {
-        messageDiv.firstChild.nodeValue = playerCpu.isAllOut() ? "You WIN!!!!" : "ggez";
+        playerBtnArr.forEach(e => e.disabled = true);
+        messageDiv.firstChild.nodeValue = "Result: " + playerCpu.isAllOut() ? "You WIN!!!!" : "ggez";
     }
     else
     {
-        messageDiv.firstChild.nodeValue = message;
+        messageDiv.firstChild.nodeValue = "Result: " + message;
         log.appendChild(document.createTextNode(message + "\n"));
     }
 
-}
-
-function removeAllListeners(element)
-{
-    var cloned = element.cloneNode(true);
-    element.parentNode.replaceChild(cloned,element);
 }
 
 function cpuChoice()
