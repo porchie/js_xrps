@@ -111,7 +111,7 @@ function cpuChoice()
     return choice;
 }
 
-function pickRndFrArr(arr) //picks a rand idx from an array
+function pickRndFrArr(arr) //picks a random idx from an array
 {
     if (arr.length == 0) return -1;
     var rnd = rndNum(0,arr.length-1);
@@ -124,6 +124,36 @@ function rndNum(min,max)
     var mult = max-(min-1);
 	var rnd = parseInt(Math.random()*mult) + min;		
 	return rnd;
+}
+
+function buildWeapon(playerArg, weaponToBuild) //playerArg = 0 is usr
+{                                              //otherwise always cpu
+    player = (playerArg==0) ? playerUsr:playerCpu;
+    if(playerBuildWeapon(player,weaponToBuild))
+    {
+        //build successful display appropriate msg and display change
+    }
+    else
+    {
+        //build unsuccessful, say so kk
+    }
+}
+
+function playerBuildWeapon(player, weaponToBuild)
+{
+    if (weaponToBuild == ROCK)
+    {
+        if(player.isOut(1) || player.isOut(2)) return false;
+
+    }
+    else if (weaponToBuild == PAPER)
+    {
+        if(player.isOut(0) || player.isOut(2)) return false;
+    }
+    else if (weaponToBuild == SCISSOR)
+    {
+        if(player.isOut(0) || player.isOut(1)) return false;
+    }
 }
 
 

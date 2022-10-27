@@ -56,4 +56,11 @@ export class Player
     {
         return (this.isOut(0) && this.isOut(1) && this.isOut(2))
     }
+
+    oneLeft()
+    {
+        return (this.isOut(0) && this.isOut(1)) || //no r and p
+        (this.isOut(1) && this.isOut(2)) ||        //no p and s
+        (this.isOut(0) && this.isOut(2));          //no r and s
+    }
 }
