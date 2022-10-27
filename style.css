@@ -25,10 +25,10 @@
 .picture-ui
 {
     font: 18pt 'Georgia';
-    height: 200px;
+    height: 100px;
     display: inline-flex;
     align-items: flex-start;
-    width: 200px;
+    width: 100px;
     border: thick solid blueviolet;
 }
 
