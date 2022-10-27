@@ -5,8 +5,8 @@ const RPSTABLE = [2,1,0,0,2,1,1,0,2];
 const RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
 const messageDiv = document.getElementById("outdiv");
 const graphicsDiv = document.getElementById("graphical");
-var playerUsr = new Player(5,5,5);
-var playerCpu = new Player(0,1,0);
+let playerUsr = new Player(5,5,5);
+let playerCpu = new Player(0,1,0);
 const playerBtnArr = [document.getElementById("ply-r"),document.getElementById("ply-p"),document.getElementById("ply-s")];
 const cpuDisplayArr = [document.getElementById("cpu-r"),document.getElementById("cpu-p"),document.getElementById("cpu-s")];
 const resetBtn = document.getElementById("rst");
@@ -26,12 +26,6 @@ u  s   w l t
 */
 function initialize()
 {
-    /*
-    playerBtnArr[ROCK].addEventListener('click',function(){playRound(ROCK)});
-    playerBtnArr[PAPER].addEventListener('click',function(){playRound(PAPER)});
-    playerBtnArr[SCISSOR].addEventListener('click', function(){playRound(SCISSOR)});
-    resetBtn.addEventListener('click',function(){reset()});
-    */
     playerBtnArr[ROCK].onclick = function(){playRound(ROCK)};
     playerBtnArr[PAPER].onclick = function(){playRound(PAPER)};
     playerBtnArr[SCISSOR].onclick = function(){playRound(SCISSOR)};
@@ -40,10 +34,10 @@ function initialize()
     messageDiv.appendChild(document.createTextNode("Result: "));
     while(log.firstChild)log.removeChild(log.firstChild);
     log.appendChild(document.createTextNode("Log:\n"));
-    for(var i = 0;i<3;i++)
+    for(let i = 0;i<3;i++)
     {
-        var p = playerBtnArr[i];
-        var c = cpuDisplayArr[i];
+        let p = playerBtnArr[i];
+        let c = cpuDisplayArr[i];
         p.innerHTML = playerUsr.rpsArr[i]; // change
         c.innerHTML = playerCpu.rpsArr[i];
     }
@@ -54,8 +48,13 @@ function initialize()
 function reset()
 {
     playerBtnArr.forEach(e => e.disabled = false)
-    playerUsr = new Player(5,5,5);
-    playerCpu = new Player(0,1,0);
+    playerUsr.setR(5);
+    playerUsr.setP(5);
+    playerUsr.setS(5);
+    playerCpu.setR(0);
+    playerCpu.setP(1);
+    playerCpu.setS(0);
+
     initialize();
 }
 
@@ -70,7 +69,7 @@ function playRound(usrIn)
     var result = RPSTABLE[(cpu * 3) + usrIn];
     
     console.log(RPSSTRING[usrIn] + " " + RPSSTRING[cpu]);        
-    var message = "";
+    let message = "";
     if(result == 0) //L
     {
         playerUsr.rm(usrIn);
@@ -107,22 +106,22 @@ function playRound(usrIn)
 
 function cpuChoice()
 {
-    var choice = pickRndFrArr(playerCpu.arrOfArsenal()) //add intelligence l8r
+    let choice = pickRndFrArr(playerCpu.arrOfArsenal()) //add intelligence l8r
     return choice;
 }
 
 function pickRndFrArr(arr) //picks a random idx from an array
 {
     if (arr.length == 0) return -1;
-    var rnd = rndNum(0,arr.length-1);
-    var idx = rndNum(0,arr.length-1);
+    let rnd = rndNum(0,arr.length-1);
+    let idx = rndNum(0,arr.length-1);
     return arr[idx];
 }
 
 function rndNum(min,max)
 {
-    var mult = max-(min-1);
-	var rnd = parseInt(Math.random()*mult) + min;		
+    let mult = max-(min-1);
+	let rnd = parseInt(Math.random()*mult) + min;		
 	return rnd;
 }
 

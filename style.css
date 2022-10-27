@@ -1,3 +1,41 @@
+.container
+{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    grid-template-rows: repeat(3,1fr);
+}
+
+.text-ui
+{
+    grid-column: -1;
+    grid-row: 1/3;
+    float: right;
+    width: 400px;
+}
+
+.option-ui
+{
+    grid-row: -1;
+    grid-column: -1;
+    position: relative;
+}
+
+.play-ui
+{
+    grid-column: 1/4;
+    grid-row: -1;
+    position: relative;
+    height: 220px;
+}
+
+.cpu-ui
+{
+    grid-column: 1/4;
+    grid-row: 1;   
+    float: left;
+}
+
 .rock
 {
     background-image: url("./images/rock.png");
@@ -16,45 +54,47 @@
     float:left;
 }
 
-.cpu-ui
-{
-    float: right;
-}
 
 
 .picture-ui
 {
     font: 18pt 'Georgia';
-    height: 100px;
     display: inline-flex;
     align-items: flex-start;
-    width: 100px;
     border: thick solid blueviolet;
 }
 
+.cpu-pic
+{
+    background-size: 100px;
+    height: 100px;
+    width: 100px;
+}
 
+.player-pic
+{
+    background-size: 150px;
+    height: 150px;
+    width: 150px;
+}
+
+
+/*textui*/
 .msg
 {
+    width: 400px;
     border: medium solid blueviolet;
 }
 
 .log
 {
+    width: 400px;
+    height: 200px;
     white-space: pre;
 
 }
 
-.option-ui
-{
-    position: relative;
-}
-
-.play-ui
-{
-    position: relative;
-    height: 220px;
-}
-
+/*optionui*/
 .btn-reset
 {
     background-image: url("./images/reset.png");

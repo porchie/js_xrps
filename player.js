@@ -43,7 +43,7 @@ export class Player
         }
         //at this point we have an ordered array of all of the arsenal, basicly if rock=5 paper=6 scissor=2
         //arr looks like [0,0,0,0,0,1,1,1,1,1,1,2,2]  now we need to pick a random element from this arr
-        //This skips a conditional for the cpu.
+        //This skips a conditional for the cpu
         return arr;
     }
 
