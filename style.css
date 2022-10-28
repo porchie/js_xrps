@@ -51,7 +51,10 @@
 
 .player-ui
 {
-    float:left;
+    padding-left: 20px;
+    border: medium solid blueviolet;
+    width: 500px;
+    height: 200px;
 }
 
 
