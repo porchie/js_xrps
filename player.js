@@ -63,4 +63,9 @@ export class Player
         (this.isOut(1) && this.isOut(2)) ||        //no p and s
         (this.isOut(0) && this.isOut(2));          //no r and s
     }
+
+    printVals() //for testing
+    {
+        console.log(this.rpsArr[0] + " " + this.rpsArr[1] + " " + this.rpsArr[2]);
+    }
 }

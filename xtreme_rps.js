@@ -6,11 +6,12 @@ const RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
 const messageDiv = document.getElementById("outdiv");
 const graphicsDiv = document.getElementById("graphical");
 let playerUsr = new Player(5,5,5);
-let playerCpu = new Player(0,1,0);
-const playerMovesLog = [];
-const resultLog = [];
+let playerCpu = new Player(5,5,5);
+let playerMovesLog = [];
+let resultLog = [];
 const playerBtnArr = [document.getElementById("ply-r"),document.getElementById("ply-p"),document.getElementById("ply-s")];
 const cpuDisplayArr = [document.getElementById("cpu-r"),document.getElementById("cpu-p"),document.getElementById("cpu-s")];
+const buildBtnArr = [document.getElementById("bld-r"),document.getElementById("bld-r"),document.getElementById("bld-r")];
 const resetBtn = document.getElementById("rst");
 const log = document.getElementById("log");
 
@@ -19,7 +20,7 @@ const log = document.getElementById("log");
 
 c  r   t w l
 p  p   l t w
-u  s   w l t
+u  s   w l t,
 
 (cpu*3)+usr
 2-tie
@@ -28,10 +29,14 @@ u  s   w l t
 */
 function initialize()
 {
-    playerBtnArr[ROCK].onclick = function(){playRound(ROCK)};
-    playerBtnArr[PAPER].onclick = function(){playRound(PAPER)};
-    playerBtnArr[SCISSOR].onclick = function(){playRound(SCISSOR)};
+    playerBtnArr[ROCK].onclick = () => playRound(ROCK);
+    playerBtnArr[PAPER].onclick = () => playRound(PAPER);
+    playerBtnArr[SCISSOR].onclick = () => playRound(SCISSOR);
     resetBtn.onclick = function(){reset()};
+    buildBtnArr[ROCK].onclick = () => UsrbuildWeapon(ROCK)
+    buildBtnArr[PAPER].onclick = () => UsrbuildWeapon(PAPER)
+    buildBtnArr[SCISSOR].onclick = () => UsrbuildWeapon(SCISSOR)
+
     while(messageDiv.firstChild) messageDiv.removeChild(messageDiv.firstChild);
     messageDiv.appendChild(document.createTextNode("Result: "));
     while(log.firstChild)log.removeChild(log.firstChild);
@@ -59,13 +64,10 @@ function setupPlayers(numWeaps)
 
 function reset()
 {
+    playerMovesLog = [];
+    resultLog = [];
     playerBtnArr.forEach(e => e.disabled = false)
-    playerUsr.setR(5);
-    playerUsr.setP(5);
-    playerUsr.setS(5);
-    playerCpu.setR(0);
-    playerCpu.setP(1);
-    playerCpu.setS(0);
+    setupPlayers(5);
     initialize();
 }
 
@@ -78,28 +80,34 @@ function playRound(usrIn)
     }
     
     //keeping track of last 3 moves
-    while(playerMovesLog.length >= 3)
+    playerMovesLog.push(usrIn)
+    while(playerMovesLog.length > 3)
     {
         playerMovesLog.shift()
     }
-    playerMovesLog.push(usrIn)
-
+    
     //cpuBuild();
-    var cpu = cpuChoice(); //CPU
-
-    var result = RPSTABLE[(cpu * 3) + usrIn];//cpu vs usr result
+    let cpu = cpuChoice(); //CPU
+    let result = RPSTABLE[(cpu * 3) + usrIn];//cpu vs usr result
     console.log(RPSSTRING[usrIn] + " " + RPSSTRING[cpu]);    
-
+    
     //keeping track of last 3 results
     resultLog.push(result);
-    while(resultLog.length >= 3)
+    while(resultLog.length > 3)
     {
         resultLog.shift();
     }
+    //tie clause
     if(resultLog[0] == 2 && (resultLog[0] == resultLog[1] && resultLog[0] == resultLog[2])) //3 
     {
-        playerUsr.rm(pickRndFrArr(playerUsr.arrOfArsenal));
-        playerCpu.rm(pickRndFrArr(playerCpu.arrOfArsenal));
+        playerUsr.rm(pickRndFrArr(playerUsr.arrOfArsenal()));
+        playerCpu.rm(pickRndFrArr(playerCpu.arrOfArsenal()));
+        btnUpdate();
+        let message = "Both players have lost a weapon due to 3 ties in a row";
+        messageDiv.firstChild.nodeValue = message;
+        log.appendChild(document.createTextNode(message + "\n"));
+        resultLog = [];
+        return;
     }
 
     let message = "";
@@ -119,15 +127,7 @@ function playRound(usrIn)
     {
         message = "Both players chose " + RPSSTRING[usrIn];
     }
-    
-    //BUTTON UPDATING
-    playerBtnArr[usrIn].innerHTML =  playerUsr.rpsArr[usrIn];
-    playerBtnArr[cpu].innerHTML =  playerUsr.rpsArr[cpu];
-    cpuDisplayArr[usrIn].innerHTML = playerCpu.rpsArr[usrIn];
-    cpuDisplayArr[cpu].innerHTML = playerCpu.rpsArr[cpu];
-    
-
-    console.log(playerCpu.oneLeft());
+    btnUpdate();
     if(playerUsr.oneLeft() || playerCpu.oneLeft()) // GAME ENDS
     {
         playerBtnArr.forEach(e => e.disabled = true);
@@ -135,10 +135,24 @@ function playRound(usrIn)
     }
     else //LOG
     {
-        messageDiv.firstChild.nodeValue = "Result: " + message;
-        log.appendChild(document.createTextNode(message + "\n"));
+        messageAndLog(message);
     }
 
+}
+
+function messageAndLog(message)
+{
+    messageDiv.firstChild.nodeValue = "Result: " + message;
+     log.appendChild(document.createTextNode(message + "\n"));
+}
+
+function btnUpdate()
+{
+    for(let i = 0;i<3;i++)
+    {
+        playerBtnArr[i].innerHTML = playerUsr.rpsArr[i];
+        cpuDisplayArr[i].innerHTML = playerCpu.rpsArr[i];
+    }
 }
 
 function cpuChoice()
@@ -164,41 +178,76 @@ function rndNum(min,max)
 
 function cpuBuild()
 {
-    
+    let idx = -1;
+    for (let i = 0;i<3;i++)
+    {
+        if(playerCpu.isOut(i))
+        {
+            idx = i;
+        }
+    }
+    if (idx == -1)
+    {
+        return;
+    }
+    else
+    {
+        buildWeapon(playerCpu, idx);
+    }
 }
 
-function buildWeapon(playerArg, weaponToBuild) //playerArg = 0 is usr
-{                                              //otherwise always cpu
-    player = (playerArg==0) ? playerUsr:playerCpu;
-    if(playerBuildWeapon(player,weaponToBuild))
+function UsrbuildWeapon(weaponToBuild)
+{ //wrapper for buildWeapon so log can respond to result of build weapon
+    
+    if(buildWeapon(playerUsr,weaponToBuild))
     {
         //build successful display appropriate msg and display change
     }
     else
     {
-        //build unsuccessful, say so kk
+        messageAndLog("Failed to build Weapon")
     }
 }
 
-function playerBuildWeapon(player, weaponToBuild)
+function buildWeapon(player, weaponToBuild) //builds weapon retruns true if succ false otherwise
 {
     if (weaponToBuild == ROCK)
     {
-        if(player.isOut(0)) return false;
-        if(player.isOut(1) || player.isOut(2)) return false;
+        if(player.isOut(ROCK)) return false;
+        if(player.isOut(PAPER) || player.isOut(SCISSOR)) return false;
+        player.rm(PAPER);
+        player.rm(SCISSOR);
+        player.add(ROCK);
     }
     else if (weaponToBuild == PAPER)
     {
-        if(player.isOut(1)) return false;
-        if(player.isOut(0) || player.isOut(2)) return false;
+        if(player.isOut(PAPER)) return false;
+        if(player.isOut(ROCK) || player.isOut(SCISSOR)) return false;
+        player.rm(ROCK);
+        player.rm(SCISSOR);
+        player.add(PAPER);
     }
     else if (weaponToBuild == SCISSOR)
     {
-        if(player.isOut(2)) return false;
-        if(player.isOut(0) || player.isOut(1)) return false;
+        if(player.isOut(SCISSOR)) return false;
+        if(player.isOut(ROCK) || player.isOut(PAPER)) return false;
+        player.rm(ROCK);
+        player.rm(PAPER);
+        player.add(SCISSOR);
     }
 }
 
 
 window.addEventListener('load', initialize);
 
+/*
+///// TODO /////
+-this is bad solution and code but whatever
+-AI          | X
+-BUilders    | X
+-TIE CLAWS   | O
+-BIGER GAEMS | X
+-Loss claWs  | X
+-log fit     | X
+-log scroll  | X
+*/
