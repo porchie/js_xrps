@@ -66,7 +66,8 @@ function reset()
 {
     playerMovesLog = [];
     resultLog = [];
-    playerBtnArr.forEach(e => e.disabled = false)
+    playerBtnArr.forEach(e => e.disabled = false);
+    enableBuilders();
     setupPlayers(5);
     initialize();
 }
@@ -211,6 +212,7 @@ function UsrBuild(weaponToBuild)
     
     if(buildWeapon(playerUsr,weaponToBuild))
     {
+        disableBuilders();
         messageAndLog("Successfully built " + RPSSTRING[weaponToBuild] + ".");
     }
     else
@@ -244,6 +246,15 @@ function buildWeapon(player, weaponToBuild) //builds weapon retruns true if succ
     }
     btnUpdate();
     return true;
+}
+
+function enableBuilders()
+{
+    buildBtnArr.forEach(e => e.disabled = false);
+}
+function disableBuilders(idx)
+{
+    buildBtnArr.forEach(e => e.disabled = true);
 }
 
 
