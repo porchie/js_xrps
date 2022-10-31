@@ -5,6 +5,7 @@ export class Player
     constructor(r,p,s)
     {
         this.rpsArr = [r,p,s];
+        this.breakArr = [false,false,false];
     }
 
     setR(num)
@@ -21,13 +22,26 @@ export class Player
     {
         this.rpsArr[2] = num;
     }
+    
+    break(idx)
+    {
+        this.breakArr[idx] = true;
+    }
+    
+    isBreak(idx)
+    {
+        return this.breakArr[idx];
+    }
+    
     rm(idx) //remove one
     {   
+        if(this.breakArr[idx]) return;
         this.rpsArr[idx]--;
     }
-
+    
     add(idx)// add one
     {
+        if(this.breakArr[idx]) return;
         this.rpsArr[idx]++;
     }
 

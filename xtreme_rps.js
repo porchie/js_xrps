@@ -11,7 +11,7 @@ let playerMovesLog = [];
 let resultLog = [];
 const playerBtnArr = [document.getElementById("ply-r"),document.getElementById("ply-p"),document.getElementById("ply-s")];
 const cpuDisplayArr = [document.getElementById("cpu-r"),document.getElementById("cpu-p"),document.getElementById("cpu-s")];
-const buildBtnArr = [document.getElementById("bld-r"),document.getElementById("bld-r"),document.getElementById("bld-r")];
+const buildBtnArr = [document.getElementById("bld-r"),document.getElementById("bld-p"),document.getElementById("bld-s")];
 const resetBtn = document.getElementById("rst");
 const log = document.getElementById("log");
 
@@ -33,9 +33,9 @@ function initialize()
     playerBtnArr[PAPER].onclick = () => playRound(PAPER);
     playerBtnArr[SCISSOR].onclick = () => playRound(SCISSOR);
     resetBtn.onclick = function(){reset()};
-    buildBtnArr[ROCK].onclick = () => UsrbuildWeapon(ROCK)
-    buildBtnArr[PAPER].onclick = () => UsrbuildWeapon(PAPER)
-    buildBtnArr[SCISSOR].onclick = () => UsrbuildWeapon(SCISSOR)
+    buildBtnArr[ROCK].onclick = () => UsrBuild(ROCK)
+    buildBtnArr[PAPER].onclick = () => UsrBuild(PAPER)
+    buildBtnArr[SCISSOR].onclick = () => UsrBuild(SCISSOR)
 
     while(messageDiv.firstChild) messageDiv.removeChild(messageDiv.firstChild);
     messageDiv.appendChild(document.createTextNode("Result: "));
@@ -78,12 +78,27 @@ function playRound(usrIn)
         messageDiv.firstChild.nodeValue = "Out of " + RPSSTRING[usrIn];
         return; 
     }
+
+    //should never run, but idk js is weird
+    if(playerUsr.isBreak(usrIn))
+    {
+        messageDiv.firstChild.nodeValue = RPSSTRING[usrIn] = " is broken";
+        return;
+    }
     
     //keeping track of last 3 moves
     playerMovesLog.push(usrIn)
     while(playerMovesLog.length > 3)
     {
         playerMovesLog.shift()
+    }
+    //break clause
+    if(playerMovesLog[0] == playerMovesLog[1] && playerMovesLog[0] == playerMovesLog[2])
+    {
+        playerUsr.break(playerMovesLog[0]);
+        messageAndLog("Player's " + RPSSTRING[playerMovesLog[0]] + " has broken!");
+        playerBtnArr[playerMovesLog[0]].disabled = true;        
+        playerMovesLog = [];
     }
     
     //cpuBuild();
@@ -143,7 +158,7 @@ function playRound(usrIn)
 function messageAndLog(message)
 {
     messageDiv.firstChild.nodeValue = "Result: " + message;
-     log.appendChild(document.createTextNode(message + "\n"));
+    log.appendChild(document.createTextNode(message + "\n"));
 }
 
 function btnUpdate()
@@ -157,6 +172,11 @@ function btnUpdate()
 
 function cpuChoice()
 {
+    let idx = -1;
+    if(playerCpu.isOut(ROCK)) idx = ROCK;
+    if(playerCpu.isOut(PAPER)) idx = PAPER;
+    if(playerCpu.isOut(SCISSOR)) idx = SCISSOR
+    cpuBuild();
     let choice = pickRndFrArr(playerCpu.arrOfArsenal()) 
     //intelligence
     return choice;
@@ -176,36 +196,26 @@ function rndNum(min,max)
 	return rnd;
 }
 
-function cpuBuild()
+function cpuBuild(idx)
 {
-    let idx = -1;
-    for (let i = 0;i<3;i++)
+    if(idx == -1) return;
+    if(buildWeapon(playerCpu, idx))
     {
-        if(playerCpu.isOut(i))
-        {
-            idx = i;
-        }
+           log.appendChild(document.createTextNode("CPU built " + RPSSTRING[idx] + ".\n"));
     }
-    if (idx == -1)
-    {
-        return;
-    }
-    else
-    {
-        buildWeapon(playerCpu, idx);
-    }
+    
 }
 
-function UsrbuildWeapon(weaponToBuild)
+function UsrBuild(weaponToBuild)
 { //wrapper for buildWeapon so log can respond to result of build weapon
     
     if(buildWeapon(playerUsr,weaponToBuild))
     {
-        //build successful display appropriate msg and display change
+        messageAndLog("Successfully built " + RPSSTRING[weaponToBuild] + ".");
     }
     else
     {
-        messageAndLog("Failed to build Weapon")
+        messageAndLog("Failed to build Weapon");
     }
 }
 
@@ -213,28 +223,27 @@ function buildWeapon(player, weaponToBuild) //builds weapon retruns true if succ
 {
     if (weaponToBuild == ROCK)
     {
-        if(player.isOut(ROCK)) return false;
-        if(player.isOut(PAPER) || player.isOut(SCISSOR)) return false;
+        if(player.isOut(ROCK) || (player.isOut(PAPER) || player.isOut(SCISSOR))) return false;
         player.rm(PAPER);
         player.rm(SCISSOR);
         player.add(ROCK);
     }
     else if (weaponToBuild == PAPER)
     {
-        if(player.isOut(PAPER)) return false;
-        if(player.isOut(ROCK) || player.isOut(SCISSOR)) return false;
+        if(player.isOut(PAPER) || (player.isOut(ROCK) || player.isOut(SCISSOR))) return false;
         player.rm(ROCK);
         player.rm(SCISSOR);
         player.add(PAPER);
     }
     else if (weaponToBuild == SCISSOR)
     {
-        if(player.isOut(SCISSOR)) return false;
-        if(player.isOut(ROCK) || player.isOut(PAPER)) return false;
+        if(player.isOut(SCISSOR) || (player.isOut(PAPER) || player.isOut(ROCK))) return false;
         player.rm(ROCK);
         player.rm(PAPER);
         player.add(SCISSOR);
     }
+    btnUpdate();
+    return true;
 }
 
 
@@ -242,12 +251,13 @@ window.addEventListener('load', initialize);
 
 /*
 ///// TODO /////
--this is bad solution and code but whatever
+very piss solutions incoming cuz i hate js, free energy real?!?1?!
 -AI          | X
--BUilders    | X
+-BUilders    | O
+-break claws | O
 -TIE CLAWS   | O
 -BIGER GAEMS | X
--Loss claWs  | X
--log fit     | X
--log scroll  | X
+-Loss claWs  | O
+-log fit     | O
+-log scroll  | O
 */
