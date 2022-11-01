@@ -4,7 +4,7 @@ const ROCK = 0; const PAPER = 1; const SCISSOR = 2;
 const RPSTABLE = [2,1,0,0,2,1,1,0,2];
 const RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
 const messageDiv = document.getElementById("outdiv");
-const graphicsDiv = document.getElementById("graphical");
+const setupIn = document.getElementById("setup-in");
 let playerUsr = new Player(5,5,5);
 let playerCpu = new Player(5,5,5);
 let playerMovesLog = [];
@@ -14,7 +14,9 @@ const playerBtnArr = [document.getElementById("ply-r"),document.getElementById("
 const cpuDisplayArr = [document.getElementById("cpu-r"),document.getElementById("cpu-p"),document.getElementById("cpu-s")];
 const buildBtnArr = [document.getElementById("bld-r"),document.getElementById("bld-p"),document.getElementById("bld-s")];
 const resetBtn = document.getElementById("rst");
+const setupBtn = document.getElementById("btn-setup");
 const log = document.getElementById("log");
+let numWeaps = 5;
 
 /*     u s r
        r p s
@@ -34,6 +36,7 @@ function initialize()
     playerBtnArr[PAPER].onclick = () => playRound(PAPER);
     playerBtnArr[SCISSOR].onclick = () => playRound(SCISSOR);
     resetBtn.onclick = () => reset();
+    setupBtn.onclick = () => setup();
     buildBtnArr[ROCK].onclick = () => UsrBuild(ROCK)
     buildBtnArr[PAPER].onclick = () => UsrBuild(PAPER)
     buildBtnArr[SCISSOR].onclick = () => UsrBuild(SCISSOR)
@@ -42,15 +45,17 @@ function initialize()
     messageDiv.appendChild(document.createTextNode("Result: "));
     while(log.firstChild)log.removeChild(log.firstChild);
     log.appendChild(document.createTextNode("Log:\n"));
-    for(let i = 0;i<3;i++)
-    {
-        let p = playerBtnArr[i];
-        let c = cpuDisplayArr[i];
-        p.innerHTML = playerUsr.rpsArr[i]; // change
-        c.innerHTML = playerCpu.rpsArr[i];
-    }
+    btnUpdate();
 
 
+}
+
+function setup()
+{
+    numWeaps = parseInt(setupIn.setWeap.value);
+    setupIn.setWeap.value = "";
+    console.log(numWeaps);
+    reset();
 }
 
 function setupPlayers(numWeaps)
@@ -70,7 +75,7 @@ function reset()
     resultLog = [];
     enableButtons();
     enableBuilders();
-    setupPlayers(5);
+    setupPlayers(numWeaps);
     initialize();
 }
 
@@ -83,7 +88,7 @@ function playRound(usrIn)
         return; 
     }
 
-    //should never run, but idk js is weird
+    //should never run, but just in case
     if(playerUsr.isBreak(usrIn))
     {
         messageDiv.firstChild.nodeValue = RPSSTRING[usrIn] = " is broken";
@@ -318,19 +323,4 @@ function enableButtons()
 {
     playerBtnArr.forEach(e => e.disabled = false);
 }
-
-
 window.addEventListener('load', initialize);
-
-/*
-///// TODO /////
-very piss solutions incoming cuz i hate js, free energy real?!?1?!
--AI          | O
--BUilders    | O
--break claws | O
--TIE CLAWS   | O
--BIGER GAEMS | X
--Loss claWs  | O
--log fit     | O
--log scroll  | O
-*/
