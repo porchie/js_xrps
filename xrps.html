@@ -1,13 +1,14 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
+    <head >
         <link rel="shortcut icon" href="./images/img.png">
-        <title></title>
+        <title>XTREME-RPS</title>
         <link rel="stylesheet" href="style.css">      
     </head>
-    <body>
+    <body style="background-color: black; color: white;">
         <div class = "container">
-            <div class = "graphics" id ="graphical"></div>
+            <div class = "usr-label label"></div>
+            <div class = "cpu-label label"></div>
             <div class = "cpu-ui">
                 <div class = "picture-ui cpu-pic rock" id = "cpu-r"></div>
                 <div class = "picture-ui cpu-pic paper" id = "cpu-p"></div>
@@ -29,6 +30,7 @@
                 <button class = "btn btn-build rock" id = "bld-r"></button>
                 <button class = "btn btn-build paper" id = "bld-p"></button>
                 <button class = "btn btn-build scissor" id = "bld-s"></button>
+                <button class = "setup btn" id = "btn-setup"></button>
             </div>
         </div>
         <script type ="module" src = "./player.js"></script>

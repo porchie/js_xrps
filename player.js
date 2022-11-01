@@ -78,6 +78,19 @@ export class Player
         (this.isOut(0) && this.isOut(2));          //no r and s
     }
 
+    leastWeapon()
+    {
+        let least = 0;
+        for(let leastIdx = 1; leastIdx<3; leastIdx++)
+        {
+            if(this.rpsArr[least] > this.rpsArr[leastIdx])
+            {
+                least = leastIdx;
+            }
+        }
+        return least;
+    }
+
     printVals() //for testing
     {
         console.log(this.rpsArr[0] + " " + this.rpsArr[1] + " " + this.rpsArr[2]);

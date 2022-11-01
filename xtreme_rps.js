@@ -8,6 +8,7 @@ const graphicsDiv = document.getElementById("graphical");
 let playerUsr = new Player(5,5,5);
 let playerCpu = new Player(5,5,5);
 let playerMovesLog = [];
+let cpuMovesLog = [];
 let resultLog = [];
 const playerBtnArr = [document.getElementById("ply-r"),document.getElementById("ply-p"),document.getElementById("ply-s")];
 const cpuDisplayArr = [document.getElementById("cpu-r"),document.getElementById("cpu-p"),document.getElementById("cpu-s")];
@@ -65,8 +66,9 @@ function setupPlayers(numWeaps)
 function reset()
 {
     playerMovesLog = [];
+    cpuMovesLog = [];
     resultLog = [];
-    disableButtons();
+    enableButtons();
     enableBuilders();
     setupPlayers(5);
     initialize();
@@ -74,6 +76,7 @@ function reset()
 
 function playRound(usrIn)
 {
+    enableBuilders();
     if(playerUsr.isOut(usrIn)) //out of weapon
     {
         messageDiv.firstChild.nodeValue = "Out of " + RPSSTRING[usrIn];
@@ -88,10 +91,10 @@ function playRound(usrIn)
     }
     
     //keeping track of last 3 moves
-    playerMovesLog.push(usrIn)
+    playerMovesLog.push(usrIn);
     while(playerMovesLog.length > 3)
     {
-        playerMovesLog.shift()
+        playerMovesLog.shift();
     }
     //break clause
     if(playerMovesLog[0] == playerMovesLog[1] && playerMovesLog[0] == playerMovesLog[2])
@@ -104,9 +107,14 @@ function playRound(usrIn)
     
     //cpuBuild();
     let cpu = cpuChoice(); //CPU
+    //last 3 cpu moves
+    cpuMovesLog.push(usrIn);
+    while(cpuMovesLog.length > 3)
+    {
+        cpuMovesLog.shift();
+    }
     let result = RPSTABLE[(cpu * 3) + usrIn];//cpu vs usr result
-    console.log(RPSSTRING[usrIn] + " " + RPSSTRING[cpu]);    
-    
+  
     //keeping track of last 3 results
     resultLog.push(result);
     while(resultLog.length > 3)
@@ -146,7 +154,7 @@ function playRound(usrIn)
     btnUpdate();
     if(playerUsr.oneLeft() || playerCpu.oneLeft()) // GAME ENDS
     {
-        enableButtons();
+        disableButtons();
         messageDiv.firstChild.nodeValue = "Result: " + playerCpu.isAllOut() ? "You WIN!!!!" : "ggez";
     }
     else //LOG
@@ -175,28 +183,55 @@ function cpuChoice()
 {
     let idx = -1;
     if(playerCpu.isOut(ROCK)) idx = ROCK;
-    if(playerCpu.isOut(PAPER)) idx = PAPER;
-    if(playerCpu.isOut(SCISSOR)) idx = SCISSOR
-    cpuBuild();
-    let choice = pickRndFrArr(playerCpu.arrOfArsenal()) 
-    //intelligence
+    else if(playerCpu.isOut(PAPER)) idx = PAPER;
+    else if(playerCpu.isOut(SCISSOR)) idx = SCISSOR
+    cpuBuild(idx);
+    let choice = pickRndFrArr(playerCpu.arrOfArsenal()) //random move
+    choice = bestMoveBasedOnLast3Moves(choice); // intelligence move
     return choice;
 }
 
-function bestMoveBasedOnLast3Moves(lastThreeMoves) // intelligince
+function bestMoveBasedOnLast3Moves(initial)
 {
-    if (lastThreeMoves.length == 3)
+    let bestMove = initial;
+    if (playerMovesLog.length == 3) 
     {
-        if(lastThreeMoves[1] == lastThreeMoves[2]) //last 2 moves are same, so cpu should play that weapon
-        {                                          //ex u play 2 rock, so u think they think u will play rock again and play paper, so u play scissor, cpu best play rock
-            return lastThreeMoves[2];
+        let rnd = rndNum(1,50);
+        //player 3 in a row
+        if(playerMovesLog[0] == playerMovesLog[1])
+        { //last 2 moves are same because of 3 move clause, cpu assumes u dont play it again
+            bestMove = weakAgainst(playerMovesLog[1]); 
         }
-        let a = [... new Set(lastThreeMoves)];
-        if (a.length == 2) // combos of 0 + 1 = 1 missing 2   0 + 2 = 2 missing 1   1 + 2 = 3 missing 0
-        {       
+        //if you play 2 rock, you cannot play rock, you have to play scissor/paper,safe to play scissor for cpu
+        
+        //random chance it wont do this
+        else if(rnd >= 35)
+        {
+            let playerLeast = playerUsr.leastWeapon();
+            bestMove = weaknessOf(playerLeast); 
+        }
 
+        //checker 
+        if(cpuMovesLog[1] == cpuMovesLog[2] && bestMove == cpuMovesLog[2]) //3 in a row not allowed
+        {    
+            bestMove = initial;
+        }
+        if(playerCpu.isOut(bestMove)) 
+        {
+            bestMove = initial;
         }
     }
+    return bestMove;
+}
+
+function weaknessOf(idx)//(ROCK+1)%3 = PAPER  ROCK IS WEAK TO PAPER
+{
+    return (idx+1)%3;
+}
+
+function weakAgainst(idx)//(ROCK+2)%3 = SCISSOR, (PAPER+2)%3 = ROCK, (SCISSOR+2)%3 = PAPER
+{
+    return (idx+2)%3;
 }
 
 function pickRndFrArr(arr) //picks a random idx from an array
@@ -216,7 +251,8 @@ function rndNum(min,max)
 function cpuBuild(idx)
 {
     if(idx == -1) return;
-    if(buildWeapon(playerCpu, idx))
+    let build = buildWeapon(playerCpu,idx);
+    if(build)
     {
            log.appendChild(document.createTextNode("CPU built " + RPSSTRING[idx] + ".\n"));
     }
@@ -241,21 +277,21 @@ function buildWeapon(player, weaponToBuild) //builds weapon retruns true if succ
 {
     if (weaponToBuild == ROCK)
     {
-        if(player.isOut(ROCK) || (player.isOut(PAPER) || player.isOut(SCISSOR))) return false;
+        if((player.isBreak(PAPER) || player.isOut(SCISSOR))) return false;
         player.rm(PAPER);
         player.rm(SCISSOR);
         player.add(ROCK);
     }
     else if (weaponToBuild == PAPER)
     {
-        if(player.isOut(PAPER) || (player.isOut(ROCK) || player.isOut(SCISSOR))) return false;
+        if(player.isBreak(PAPER) || (player.isOut(ROCK) || player.isOut(SCISSOR))) return false;
         player.rm(ROCK);
         player.rm(SCISSOR);
         player.add(PAPER);
     }
     else if (weaponToBuild == SCISSOR)
     {
-        if(player.isOut(SCISSOR) || (player.isOut(PAPER) || player.isOut(ROCK))) return false;
+        if(player.isBreak(SCISSOR) || (player.isOut(PAPER) || player.isOut(ROCK))) return false;
         player.rm(ROCK);
         player.rm(PAPER);
         player.add(SCISSOR);
@@ -289,7 +325,7 @@ window.addEventListener('load', initialize);
 /*
 ///// TODO /////
 very piss solutions incoming cuz i hate js, free energy real?!?1?!
--AI          | X
+-AI          | O
 -BUilders    | O
 -break claws | O
 -TIE CLAWS   | O
