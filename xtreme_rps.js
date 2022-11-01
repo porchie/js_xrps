@@ -3,6 +3,7 @@ import {Player} from "./player.js";
 const ROCK = 0; const PAPER = 1; const SCISSOR = 2;
 const RPSTABLE = [2,1,0,0,2,1,1,0,2];
 const RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
+const RPSWEAKNESS = [
 const messageDiv = document.getElementById("outdiv");
 const graphicsDiv = document.getElementById("graphical");
 let playerUsr = new Player(5,5,5);
@@ -32,7 +33,7 @@ function initialize()
     playerBtnArr[ROCK].onclick = () => playRound(ROCK);
     playerBtnArr[PAPER].onclick = () => playRound(PAPER);
     playerBtnArr[SCISSOR].onclick = () => playRound(SCISSOR);
-    resetBtn.onclick = function(){reset()};
+    resetBtn.onclick = () => reset();
     buildBtnArr[ROCK].onclick = () => UsrBuild(ROCK)
     buildBtnArr[PAPER].onclick = () => UsrBuild(PAPER)
     buildBtnArr[SCISSOR].onclick = () => UsrBuild(SCISSOR)
@@ -66,7 +67,7 @@ function reset()
 {
     playerMovesLog = [];
     resultLog = [];
-    playerBtnArr.forEach(e => e.disabled = false);
+    disableButtons();
     enableBuilders();
     setupPlayers(5);
     initialize();
@@ -146,7 +147,7 @@ function playRound(usrIn)
     btnUpdate();
     if(playerUsr.oneLeft() || playerCpu.oneLeft()) // GAME ENDS
     {
-        playerBtnArr.forEach(e => e.disabled = true);
+        enableButtons();
         messageDiv.firstChild.nodeValue = "Result: " + playerCpu.isAllOut() ? "You WIN!!!!" : "ggez";
     }
     else //LOG
@@ -181,6 +182,22 @@ function cpuChoice()
     let choice = pickRndFrArr(playerCpu.arrOfArsenal()) 
     //intelligence
     return choice;
+}
+
+function bestMoveBasedOnLast3Moves(lastThreeMoves) // intelligince
+{
+    if (lastThreeMoves.length == 3)
+    {
+        if(lastThreeMoves[1] == lastThreeMoves[2]) //last 2 moves are same, so cpu should play that weapon
+        {                                          //ex u play 2 rock, so u think they think u will play rock again and play paper, so u play scissor, cpu best play rock
+            return lastThreeMoves[2];
+        }
+        let a = [... new Set(lastThreeMoves)];
+        if (a.length == 2) // combos of 0 + 1 = 1 missing 2   0 + 2 = 2 missing 1   1 + 2 = 3 missing 0
+        {       
+
+        }
+    }
 }
 
 function pickRndFrArr(arr) //picks a random idx from an array
@@ -252,9 +269,19 @@ function enableBuilders()
 {
     buildBtnArr.forEach(e => e.disabled = false);
 }
-function disableBuilders(idx)
+function disableBuilders()
 {
     buildBtnArr.forEach(e => e.disabled = true);
+}
+
+function disableButtons()
+{
+    playerBtnArr.forEach(e => e.disabled = true);
+}
+
+function enableButtons()
+{
+    playerBtnArr.forEach(e => e.disabled = false);
 }
 
 
