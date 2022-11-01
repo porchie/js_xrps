@@ -3,7 +3,6 @@ import {Player} from "./player.js";
 const ROCK = 0; const PAPER = 1; const SCISSOR = 2;
 const RPSTABLE = [2,1,0,0,2,1,1,0,2];
 const RPSSTRING = ["ROCK", "PAPER","SCISSOR"];
-const RPSWEAKNESS = [
 const messageDiv = document.getElementById("outdiv");
 const graphicsDiv = document.getElementById("graphical");
 let playerUsr = new Player(5,5,5);
