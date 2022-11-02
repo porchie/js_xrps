@@ -47,11 +47,10 @@ export class Player
 
     resetBroken()
     {
+        
         this.breakArr[0] =false;
         this.breakArr[1] =false;
         this.breakArr[2] =false;
-        
-        //this.breakArr.forEach(brkn => brkn = false); //this doesn't work
     }
 
     arrOfArsenal()
