@@ -45,6 +45,17 @@ export class Player
         this.rpsArr[idx]++;
     }
 
+    resetBroken()
+    {
+        
+        this.breakArr[0] =false;
+        this.breakArr[1] =false;
+        this.breakArr[2] =false;
+
+        //this.breakArr.forEach(brkn => brkn = false);
+        console.log("reset");
+    }
+
     arrOfArsenal()
     {
         var arr = [];

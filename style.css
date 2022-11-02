@@ -17,6 +17,8 @@
 
 .option-ui
 {
+    padding-top: 10px;
+    padding-left: 20px;
     border: medium solid blueviolet;
     grid-row: 3/4;
     grid-column: 4/5;
@@ -46,6 +48,23 @@
 .btn
 {
     background-color: transparent;
+    transition-duration: 0.1s;
+}
+
+.btn:hover:enabled
+{
+    border-color: yellow;
+}
+
+.btn:active
+{
+    transform: scale(0.95);
+}
+
+.btn:disabled
+{
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
 .rock
@@ -87,7 +106,7 @@
     width: 100px;
 }
 
-.player-pic
+.btn-play
 {
     color: white;
     background-size: 150px;

@@ -75,6 +75,8 @@ function reset()
     resultLog = [];
     enableButtons();
     enableBuilders();
+    playerUsr.resetBroken();
+    playerCpu.resetBroken();
     setupPlayers(numWeaps);
     initialize();
 }
@@ -160,7 +162,7 @@ function playRound(usrIn)
     if(playerUsr.oneLeft() || playerCpu.oneLeft()) // GAME ENDS
     {
         disableButtons();
-        messageDiv.firstChild.nodeValue = "Result: " + playerCpu.isAllOut() ? "You WIN!!!!" : "ggez";
+        messageDiv.firstChild.nodeValue = "Result: " + playerCpu.isAllOut() ? "You WIN!!!!" : "You LOSE";
     }
     else //LOG
     {
