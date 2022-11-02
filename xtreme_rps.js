@@ -76,7 +76,6 @@ function reset()
     enableButtons();
     enableBuilders();
     playerUsr.resetBroken();
-    playerCpu.resetBroken();
     setupPlayers(numWeaps);
     initialize();
 }
