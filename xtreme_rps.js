@@ -46,8 +46,6 @@ function initialize()
     while(log.firstChild)log.removeChild(log.firstChild);
     log.appendChild(document.createTextNode("Log:\n"));
     btnUpdate();
-
-
 }
 
 function setup()
@@ -161,7 +159,7 @@ function playRound(usrIn)
     if(playerUsr.oneLeft() || playerCpu.oneLeft()) // GAME ENDS
     {
         disableButtons();
-        messageDiv.firstChild.nodeValue = "Result: " + playerCpu.isAllOut() ? "You WIN!!!!" : "You LOSE";
+        messageDiv.firstChild.nodeValue = "Result: " + (playerCpu.oneLeft() ? "You WIN!!!!" : "You LOSE");
     }
     else //LOG
     {

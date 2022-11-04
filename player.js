@@ -26,6 +26,7 @@ export class Player
     break(idx)
     {
         this.breakArr[idx] = true;
+        this.rpsArr[idx] = 0;
     }
     
     isBreak(idx)
